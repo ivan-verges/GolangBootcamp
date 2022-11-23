@@ -1,0 +1,62 @@
+version: "3.8"
+services:
+  webapp:
+    build: .
+    ports:
+      - "8888:8888"
+    expose:
+      - '8888'
+    depends_on:
+      - redis
+      - mysql
+    links:
+      - redis
+      - mysql
+    networks:
+      - netredis
+      - netmysql
+    volumes:
+      - webapp:/var/lib/webapp
+      
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'ivanverges'
+      MYSQL_PASSWORD: 'MyP4ssw0rd'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    networks:
+      - netmysql
+    volumes:
+      - mysqldb:/var/lib/mysql
+  
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    expose:
+      - '6379'
+    networks:
+      - netredis
+    command: redis-server --save 30 1 --loglevel warning --requirepass "24071b57a13027c01339027dcccb98218f052a8f"
+    volumes:
+      - redisdb:/var/lib/redis
+
+
+volumes:
+  mysqldb:
+    driver: local
+  redisdb:
+    driver: local
+  webapp:
+    driver: local
+
+networks:
+  netredis:
+  netmysql:

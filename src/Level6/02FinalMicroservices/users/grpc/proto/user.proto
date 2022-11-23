@@ -1,0 +1,44 @@
+syntax = "proto3";
+package grpc;
+
+option go_package = "users/grpc/model";
+
+//protoc -I=/Users/ivanverges/go/src/BairesDev/Level6/02_Final_Microservices/users --go_out=/Users/ivanverges/go/src/BairesDev/Level6/02_Final_Microservices --go-grpc_out=/Users/ivanverges/go/src/BairesDev/Level6/02_Final_Microservices /Users/ivanverges/go/src/BairesDev/Level6/02_Final_Microservices/users/grpc/proto/*.proto
+
+service Users {
+    rpc GetUser(Input) returns (User) {}
+    rpc GetUserWithQuestionsAndAnswers(Input) returns (UserQuestionsAnswers) {}
+}
+
+message Input {
+    string UserId = 1;
+    string QuestionId = 2;
+    string AnswerId = 3;
+}
+
+message User {
+    int64 ID = 1;
+    string UserId = 2;
+    string UserName = 3;
+}
+
+message Answer {
+    int64 ID = 1;
+    string AnswerId = 2;
+    string QuestionId = 3;
+    string UserId = 4;
+    string Answer = 5;
+}
+
+message QuestionAnswer {
+    string QuestionId = 1;
+    string UserId = 2;
+    string Question = 3;
+    Answer Answer = 4;
+}
+
+message UserQuestionsAnswers {
+    string UserId = 1;
+    string UserName = 2;
+    repeated QuestionAnswer QuestionsWithAnswers = 3;
+}
